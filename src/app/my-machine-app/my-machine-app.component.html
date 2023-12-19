@@ -1,5 +1,7 @@
 {{hero}}
-<button (click)="translateText()">Печать предсказания</button>
-<p>Результат предсказания: {{ message }}</p>
+<input type="text" [(ngModel)]="sentence" placeholder="Enter a sentence">
+<!-- <button (click)="translateText()">Печать предсказания</button> -->
+<!-- <p>Результат предсказания: {{ message }}</p> -->
 <button (click)="sendSentence()">Отправить</button>
+<p>Translation: {{ translation }}</p>
 
