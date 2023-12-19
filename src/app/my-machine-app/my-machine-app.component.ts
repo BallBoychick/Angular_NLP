@@ -1,36 +1,40 @@
 import { Component } from '@angular/core';
+import { AppComponent } from '../app.component';
 import { pipeline } from '@xenova/transformers';
+import { HttpClient } from '@angular/common/http';
+import { ApiService } from '../api.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-my-machine-app',
   standalone: true,
-  imports: [],
+  imports: [HttpClientModule],
   templateUrl: './my-machine-app.component.html',
   styleUrl: './my-machine-app.component.css'
 })
 
 export class MyMachineAppComponent {
+  translation!: string;
   hero = 'Windstorm';
-  predres = "";
-  async predict() {
-    this.predres = "No";
+  sentence = "I love you";
+  constructor(private http: HttpClient) { }
+  message!: object;
+  
+  translateText() {
+    const url = 'http://127.0.0.1:8000/translate';
+    this.http.get(url, {}).subscribe((response) => {
+      // Handle the response here
+      console.log(response);
+      this.message = response;
+    });
+  }
 
-    let pipe = await pipeline('sentiment-analysis', "Xenova/distilbert-base-uncased-finetuned-sst-2-english");
-    let output = await pipe('I love transformers!');
-    console.log(output);
+  sendSentence() {
+    const apiUrl = 'http://127.0.0.1:8000';
+    this.http.post(apiUrl, { sentence: this.sentence }).subscribe(
+      (response) => {
+        console.log(response);
+      }
+    );
   }
 }
-function translator(arg0: string, arg1: {
-  src_lang: string; // Hindi
-  tgt_lang: string;
-}) {
-  throw new Error('Function not implemented.');
-}
-
-// Use a different model for sentiment-analysis
-    // let pipe = await pipeline('translation', 'Xenova/nllb-200-distilled-600M');
-
-    // let output = translator('जीवन एक चॉकलेट बॉक्स की तरह है।', {
-    //   src_lang: 'hin_Deva', // Hindi
-    //   tgt_lang: 'fra_Latn', // French
-    // });
